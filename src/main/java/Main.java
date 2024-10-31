@@ -1,8 +1,11 @@
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
+    public static final int SERVER_PORT = 4221;
+
     public static void main(String[] args) {
         // You can use print statements as follows for debugging, they'll be visible when running tests.
         System.out.println("Logs from your program will appear here!");
@@ -10,7 +13,7 @@ public class Main {
         // Uncomment this block to pass the first stage
 
         try {
-            ServerSocket serverSocket = new ServerSocket(4221);
+            ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
 
             // Since the tester restarts your program quite often, setting SO_REUSEADDR
             // ensures that we don't run into 'Address already in use' errors
@@ -18,7 +21,27 @@ public class Main {
 
             Socket clientSocket = serverSocket.accept(); // Wait for connection from client.
             System.out.println("accepted new connection");
-            clientSocket.getOutputStream().write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+            InputStream inputStream = clientSocket.getInputStream();
+
+            byte[] buffer = new byte[1024];
+            inputStream.read(buffer);
+
+            String request = new String(buffer);
+            String[] requestLines = request.split("\r\n");
+
+            String requestLine = requestLines[0];
+
+            String[] requestLinesSplit = requestLine.split("\\s+");
+            String method = requestLinesSplit[0];
+            String target = requestLinesSplit[1];
+
+            if (method.equals("GET") && target.equals("/")) {
+                clientSocket.getOutputStream().write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+            } else {
+                clientSocket.getOutputStream().write("HTTP/1.1 400 Not Found\r\n\r\n".getBytes());
+            }
+
+            clientSocket.close();
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         }
