@@ -38,7 +38,7 @@ public class Main {
             if (method.equals("GET") && target.equals("/")) {
                 clientSocket.getOutputStream().write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
             } else {
-                clientSocket.getOutputStream().write("HTTP/1.1 400 Not Found\r\n\r\n".getBytes());
+                clientSocket.getOutputStream().write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
             }
 
             clientSocket.close();
