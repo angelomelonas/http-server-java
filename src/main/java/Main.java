@@ -35,15 +35,56 @@ public class Main {
             String method = requestLinesSplit[0];
             String target = requestLinesSplit[1];
 
-            if (method.equals("GET") && target.equals("/")) {
-                clientSocket.getOutputStream().write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
-            } else {
-                clientSocket.getOutputStream().write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
+            switch (method) {
+                case "GET":
+                    handleGetRequest(clientSocket, target);
+                    break;
+                default:
+                    clientSocket.getOutputStream().write("HTTP/1.1 505 Method Not Allowed\r\n\r\n".getBytes());
             }
 
             clientSocket.close();
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         }
+    }
+
+    private static void handleGetRequest(Socket clientSocket, String target) throws IOException {
+        if (target.equals("/")) {
+
+            String response = createResponse(
+                    "HTTP/1.1 200 OK",
+                    new String[]{""},
+                    ""
+            );
+            clientSocket.getOutputStream().write(response.getBytes());
+
+            return;
+        }
+
+        if (target.startsWith("/echo/")) {
+            String responseBody = target.split("/")[2];
+
+            String response = createResponse(
+                    "HTTP/1.1 200 OK",
+                    new String[]{"Content-Type: text/plain", "Content-Length: " + responseBody.length()},
+                    responseBody
+            );
+            clientSocket.getOutputStream().write(response.getBytes());
+
+            return;
+        }
+
+        String response = createResponse(
+                "HTTP/1.1 404 Not Found",
+                new String[]{""},
+                ""
+        );
+        clientSocket.getOutputStream().write(response.getBytes());
+    }
+
+
+    private static String createResponse(String status, String[] headers, String body) {
+        return status + "\r\n" + String.join("\r\n", headers) + "\r\n" + body;
     }
 }
