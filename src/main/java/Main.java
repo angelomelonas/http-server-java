@@ -85,6 +85,6 @@ public class Main {
 
 
     private static String createResponse(String status, String[] headers, String body) {
-        return status + "\r\n" + String.join("\r\n", headers) + "\r\n" + body;
+        return status + "\r\n" + String.join("\r\n", headers) + "\r\n\r\n" + body;
     }
 }
