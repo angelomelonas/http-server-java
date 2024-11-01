@@ -30,7 +30,9 @@ public class Main {
             String[] rawRequestLines = rawRequest.split("\r\n");
 
             String request = rawRequestLines[0];
+            System.out.println("Request: " + request);
             String header = rawRequestLines[1];
+            System.out.println("Header: " + header);
 
             String[] requestLines = request.split("\\s+");
             String[] headerLines = header.split(":");
@@ -82,9 +84,6 @@ public class Main {
         }
 
         if (target.startsWith("/user-agent")) {
-            System.out.println(headerLines[0]);
-            System.out.println(headerLines[1]);
-
             String responseBody = headerLines[1].trim();
 
             String response = createResponse(
