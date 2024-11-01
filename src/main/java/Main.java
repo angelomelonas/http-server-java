@@ -82,6 +82,9 @@ public class Main {
         }
 
         if (target.startsWith("/user-agent")) {
+            System.out.println(headerLines[0]);
+            System.out.println(headerLines[1]);
+
             String responseBody = headerLines[1].trim();
 
             String response = createResponse(
