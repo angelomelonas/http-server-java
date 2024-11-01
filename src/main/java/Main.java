@@ -30,9 +30,8 @@ public class Main {
             String[] rawRequestLines = rawRequest.split("\r\n");
 
             String request = rawRequestLines[0];
-            System.out.println("Request: " + request);
-            String header = rawRequestLines[1];
-            System.out.println("Header: " + header);
+            String host = rawRequestLines[1];
+            String header = rawRequestLines[2];
 
             String[] requestLines = request.split("\\s+");
             String[] headerLines = header.split(":");
@@ -92,8 +91,6 @@ public class Main {
                     responseBody
             );
 
-            System.out.println(response);
-
             clientSocket.getOutputStream().write(response.getBytes());
 
             return;
@@ -106,7 +103,6 @@ public class Main {
         );
         clientSocket.getOutputStream().write(response.getBytes());
     }
-
 
     private static String createResponse(String status, String[] headers, String body) {
         return status + "\r\n" + String.join("\r\n", headers) + "\r\n\r\n" + body;
