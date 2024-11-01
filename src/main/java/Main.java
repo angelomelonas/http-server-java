@@ -2,10 +2,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
     public static final int SERVER_PORT = 4221;
@@ -86,13 +82,15 @@ public class Main {
         }
 
         if (target.startsWith("/user-agent")) {
-            String responseBody = headerLines[1];
+            String responseBody = headerLines[1].trim();
 
             String response = createResponse(
                     "HTTP/1.1 200 OK",
                     new String[]{"Content-Type: text/plain", "Content-Length: " + responseBody.length()},
                     responseBody
             );
+
+            System.out.println(response);
 
             clientSocket.getOutputStream().write(response.getBytes());
 
