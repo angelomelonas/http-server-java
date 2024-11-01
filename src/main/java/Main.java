@@ -2,6 +2,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static final int SERVER_PORT = 4221;
@@ -26,18 +30,19 @@ public class Main {
             byte[] buffer = new byte[1024];
             inputStream.read(buffer);
 
-            String request = new String(buffer);
-            String[] requestLines = request.split("\r\n");
+            String rawRequest = new String(buffer);
+            String[] rawRequestLines = rawRequest.split("\r\n");
 
-            String requestLine = requestLines[0];
+            String request = rawRequestLines[0];
+            String header = rawRequestLines[1];
 
-            String[] requestLinesSplit = requestLine.split("\\s+");
-            String method = requestLinesSplit[0];
-            String target = requestLinesSplit[1];
+            String[] requestLines = request.split("\\s+");
+            String[] headerLines = header.split(":");
+            String method = requestLines[0];
 
             switch (method) {
                 case "GET":
-                    handleGetRequest(clientSocket, target);
+                    handleGetRequest(clientSocket, headerLines, requestLines);
                     break;
                 default:
                     clientSocket.getOutputStream().write("HTTP/1.1 505 Method Not Allowed\r\n\r\n".getBytes());
@@ -49,9 +54,14 @@ public class Main {
         }
     }
 
-    private static void handleGetRequest(Socket clientSocket, String target) throws IOException {
-        if (target.equals("/")) {
+    private static void handleGetRequest(
+            Socket clientSocket,
+            String[] headerLines,
+            String[] requestLines
+    ) throws IOException {
+        String target = requestLines[1];
 
+        if (target.equals("/")) {
             String response = createResponse(
                     "HTTP/1.1 200 OK",
                     new String[]{""},
@@ -62,7 +72,7 @@ public class Main {
             return;
         }
 
-        if (target.startsWith("/echo/")) {
+        if (target.startsWith("/echo")) {
             String responseBody = target.split("/")[2];
 
             String response = createResponse(
@@ -70,6 +80,20 @@ public class Main {
                     new String[]{"Content-Type: text/plain", "Content-Length: " + responseBody.length()},
                     responseBody
             );
+            clientSocket.getOutputStream().write(response.getBytes());
+
+            return;
+        }
+
+        if (target.startsWith("/user-agent")) {
+            String responseBody = headerLines[1];
+
+            String response = createResponse(
+                    "HTTP/1.1 200 OK",
+                    new String[]{"Content-Type: text/plain", "Content-Length: " + responseBody.length()},
+                    responseBody
+            );
+
             clientSocket.getOutputStream().write(response.getBytes());
 
             return;
