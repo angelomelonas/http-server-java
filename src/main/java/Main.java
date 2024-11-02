@@ -13,11 +13,13 @@ public class Main {
             // ensures that we don't run into 'Address already in use' errors
             serverSocket.setReuseAddress(true);
 
-            Socket clientSocket = serverSocket.accept(); // Wait for connection from client.
+            do {
+                Socket clientSocket = serverSocket.accept(); // Wait for connection from client.
 
-            // Handle an incoming connection
-            Runnable connectionHandler = new ConnectionHandler(clientSocket);
-            new Thread(connectionHandler).start();
+                // Handle an incoming connection
+                Runnable connectionHandler = new ConnectionHandler(clientSocket);
+                new Thread(connectionHandler).start();
+            } while (true);
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         }

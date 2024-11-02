@@ -12,7 +12,7 @@ public class ConnectionHandler implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Accepted new connection");
+        System.out.println("Accepted a new connection");
         try {
             InputStream inputStream = this.socket.getInputStream();
 
