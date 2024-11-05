@@ -1,0 +1,4 @@
+package Response;
+
+interface ResponseHandler {
+}
