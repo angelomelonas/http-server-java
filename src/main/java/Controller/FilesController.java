@@ -18,7 +18,7 @@ public class FilesController extends AbstractController {
         try {
             String fileName = RequestUtility.getSlug(this.request);
 
-            Path path = Paths.get("tmp/" + fileName);
+            Path path = Paths.get("/tmp/" + fileName);
             if (Files.exists(path)) {
                 String fileContents = Files.readString(path);
 
