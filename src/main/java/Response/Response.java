@@ -18,12 +18,19 @@ public class Response {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = new Hashtable<>();
-        this.createResponse();
+        this.createResponse("text/html");
     }
 
-    private void createResponse() {
+    public Response(StatusCode statusCode, String body, String contentType) {
+        this.statusCode = statusCode;
+        this.body = body;
+        this.headers = new Hashtable<>();
+        this.createResponse(contentType);
+    }
+
+    private void createResponse(String contentType) {
         this.statusLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription();
-        addHeader("Content-Type", "text/html");
+        addHeader("Content-Type", contentType);
         addHeader("Content-Length", Integer.toString(body.length()));
     }
 

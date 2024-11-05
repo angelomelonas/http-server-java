@@ -1,6 +1,7 @@
 package Router;
 
 import Controller.EchoController;
+import Controller.FilesController;
 import Controller.IndexController;
 import Controller.UserAgentController;
 import Enum.StatusCode;
@@ -21,6 +22,7 @@ public class Router {
                 case "/" -> (new IndexController(this.request)).invoke();
                 case "/echo" -> (new EchoController(this.request)).invoke();
                 case "/user-agent" -> (new UserAgentController(this.request)).invoke();
+                case "/files" -> (new FilesController(this.request)).invoke();
                 default -> new Response(StatusCode.NOT_FOUND, StatusCode.NOT_FOUND.getDescription());
 
             };
