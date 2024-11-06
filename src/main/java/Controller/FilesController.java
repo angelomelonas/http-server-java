@@ -21,13 +21,14 @@ public class FilesController extends AbstractController {
             String fileName = RequestUtility.getSlug(this.request);
 
             Path path = Paths.get(HTTPServer.DIRECTORY + fileName);
+            System.out.println("File path: " + path);
             if (Files.exists(path)) {
                 String fileContents = Files.readString(path);
 
                 return new Response(StatusCode.OK, fileContents, "octet-stream");
             }
 
-            return new Response(StatusCode.NOT_FOUND, StatusCode.NOT_FOUND.getDescription());
+            return new Response(StatusCode.NOT_FOUND, "File Not Found");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

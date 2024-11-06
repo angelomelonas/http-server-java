@@ -23,7 +23,7 @@ public class Router {
                 case "/echo" -> (new EchoController(this.request)).invoke();
                 case "/user-agent" -> (new UserAgentController(this.request)).invoke();
                 case "/files" -> (new FilesController(this.request)).invoke();
-                default -> new Response(StatusCode.NOT_FOUND, "Route not found.");
+                default -> new Response(StatusCode.NOT_FOUND, "Route Not Found");
 
             };
         } catch (Exception e) {
