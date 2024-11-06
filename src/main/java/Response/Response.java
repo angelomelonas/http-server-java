@@ -18,7 +18,7 @@ public class Response {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = new Hashtable<>();
-        this.createResponse("text/html");
+        this.createResponse("text/plain");
     }
 
     public Response(StatusCode statusCode, String body, String contentType) {
