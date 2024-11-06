@@ -23,13 +23,14 @@ public class FilesController extends AbstractController {
             Path path = Paths.get(HTTPServer.DIRECTORY + fileName);
             System.out.println("File path: " + path);
             if (Files.exists(path)) {
+
                 String fileContents = Files.readString(path);
 
                 return new Response(
                         StatusCode.OK,
                         fileContents,
                         "application/octet-stream",
-                        fileContents.getBytes().length
+                        (int) path.toFile().length()
                 );
             }
 
