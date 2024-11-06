@@ -1,6 +1,7 @@
 package Controller;
 
 import Enum.StatusCode;
+import HTTPServer.HTTPServer;
 import Request.Request;
 import Response.Response;
 import Utility.RequestUtility;
@@ -8,6 +9,7 @@ import Utility.RequestUtility;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 
 public class FilesController extends AbstractController {
     public FilesController(Request request) {
@@ -18,7 +20,7 @@ public class FilesController extends AbstractController {
         try {
             String fileName = RequestUtility.getSlug(this.request);
 
-            Path path = Paths.get("/tmp/" + fileName);
+            Path path = Paths.get(HTTPServer.DIRECTORY + fileName);
             if (Files.exists(path)) {
                 String fileContents = Files.readString(path);
 
