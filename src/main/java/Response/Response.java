@@ -18,20 +18,20 @@ public class Response {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = new Hashtable<>();
-        this.createResponse("text/plain");
+        this.createResponse("text/plain", body.length());
     }
 
-    public Response(StatusCode statusCode, String body, String contentType) {
+    public Response(StatusCode statusCode, String body, String contentType, int contentLength) {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = new Hashtable<>();
-        this.createResponse(contentType);
+        this.createResponse(contentType, contentLength);
     }
 
-    private void createResponse(String contentType) {
+    private void createResponse(String contentType, int contentLength) {
         this.statusLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription();
         addHeader("Content-Type", contentType);
-        addHeader("Content-Length", Integer.toString(body.length()));
+        addHeader("Content-Length", Integer.toString(contentLength));
     }
 
     public int getStatusCode() {

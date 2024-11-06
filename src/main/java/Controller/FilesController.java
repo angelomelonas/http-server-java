@@ -25,7 +25,12 @@ public class FilesController extends AbstractController {
             if (Files.exists(path)) {
                 String fileContents = Files.readString(path);
 
-                return new Response(StatusCode.OK, fileContents, "application/octet-stream");
+                return new Response(
+                        StatusCode.OK,
+                        fileContents,
+                        "application/octet-stream",
+                        fileContents.getBytes().length
+                );
             }
 
             return new Response(StatusCode.NOT_FOUND, "File Not Found");
