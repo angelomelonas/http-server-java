@@ -58,7 +58,7 @@ public class Request {
         }
 
         String[] headerValues = header.split(":");
-        this.headers.put(headerValues[0], headerValues[1]);
+        this.headers.put(headerValues[0].strip(), headerValues[1].strip());
     }
 
     private void appendMessageBody(String bodyLine) {
