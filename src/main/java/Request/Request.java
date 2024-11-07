@@ -62,7 +62,7 @@ public class Request {
     }
 
     private void appendMessageBody(String bodyLine) {
-        this.body.append(bodyLine).append("\r\n");
+        this.body.append(bodyLine.strip()).append("\r\n");
     }
 
     public String getRequestLine() {

@@ -48,7 +48,7 @@ public class FilesController extends AbstractController {
             if (Files.exists(path)) {
                 throw new IOException("File already exists");
             } else {
-                Files.write(path, request.getBody().getBytes());
+                Files.write(path, request.getBody().strip().getBytes());
             }
 
             return new Response(
