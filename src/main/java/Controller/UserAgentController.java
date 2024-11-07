@@ -3,7 +3,6 @@ package Controller;
 import Enum.StatusCode;
 import Request.Request;
 import Response.Response;
-import Utility.RequestUtility;
 
 public class UserAgentController extends AbstractController {
     public UserAgentController(Request request) {
@@ -12,9 +11,9 @@ public class UserAgentController extends AbstractController {
 
     protected Response getResponse() {
         try {
-            String requestLine = RequestUtility.getSlug(this.request);
+            String userAgent = this.request.getHeaderParameter("User-Agent");
 
-            return new Response(StatusCode.OK, "User-Agent: " + requestLine);
+            return new Response(StatusCode.OK, userAgent);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
