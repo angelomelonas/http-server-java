@@ -42,7 +42,7 @@ public class FilesController extends AbstractController {
         Path path = Paths.get(HTTPServer.DIRECTORY + fileName);
 
         if (!Files.exists(path)) {
-            Files.writeString(path, request.getBody());
+            Files.writeString(path, request.getBody().stripTrailing());
 
             return new ResponseBuilder()
                     .setStatusCode(StatusCode.CREATED, StatusCode.CREATED.getDescription())
