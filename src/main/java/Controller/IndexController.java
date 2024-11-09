@@ -1,8 +1,8 @@
 package Controller;
 
-import Enum.StatusCode;
 import Request.Request;
 import Response.Response;
+import Response.ResponseBuilder;
 
 public class IndexController extends AbstractController {
     public IndexController(Request request) {
@@ -10,6 +10,7 @@ public class IndexController extends AbstractController {
     }
 
     protected Response getResponse() {
-        return new Response(StatusCode.OK, "");
+        return new ResponseBuilder()
+                .build();
     }
 }

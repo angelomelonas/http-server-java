@@ -1,33 +1,32 @@
 package Router;
 
-import Controller.EchoController;
-import Controller.FilesController;
-import Controller.IndexController;
-import Controller.UserAgentController;
-import Enum.StatusCode;
+import Controller.*;
 import Request.Request;
-import Response.Response;
 import Utility.RequestUtility;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Router {
     private final Request request;
+    private final Map<String, Controller> routes;
 
     public Router(Request request) {
         this.request = request;
+        this.routes = new HashMap<>();
+        initializeRoutes();
     }
 
-    public Response routeRequest() {
-        try {
-            return switch (RequestUtility.getPath(this.request)) {
-                case "/" -> (new IndexController(this.request)).invoke();
-                case "/echo" -> (new EchoController(this.request)).invoke();
-                case "/user-agent" -> (new UserAgentController(this.request)).invoke();
-                case "/files" -> (new FilesController(this.request)).invoke();
-                default -> new Response(StatusCode.NOT_FOUND, "Route Not Found");
+    private void initializeRoutes() {
+        routes.put("/", new IndexController(this.request));
+        routes.put("/echo", new EchoController(this.request));
+        routes.put("/user-agent", new UserAgentController(this.request));
+        routes.put("/files", new FilesController(this.request));
+    }
 
-            };
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public Controller routeRequest() throws Exception {
+        String path = RequestUtility.getPath(this.request);
+
+        return routes.getOrDefault(path, new RouteNotFoundController(this.request));
     }
 }

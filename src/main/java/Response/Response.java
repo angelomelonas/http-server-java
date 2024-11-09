@@ -2,66 +2,54 @@ package Response;
 
 import Enum.StatusCode;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 public class Response {
-    private String statusLine;
-    private StatusCode statusCode;
-    private String body;
-    private final Hashtable<String, String> headers;
+    private final StatusCode statusCode;
+    private final String statusMessage;
+    private final Map<String, String> headers;
+    private final String body;
 
-    public Response() {
-        this.headers = new Hashtable<>();
-    }
-
-    public Response(StatusCode statusCode, String body) {
+    public Response(StatusCode statusCode, String statusMessage, Map<String, String> headers, String body) {
         this.statusCode = statusCode;
+        this.statusMessage = statusMessage;
+        this.headers = headers;
         this.body = body;
-        this.headers = new Hashtable<>();
-        this.createResponse("text/plain", body.strip().length());
     }
 
-    public Response(StatusCode statusCode, String body, String contentType, int contentLength) {
-        this.statusCode = statusCode;
-        this.body = body;
-        this.headers = new Hashtable<>();
-        this.createResponse(contentType, contentLength);
+    public StatusCode getStatusCode() {
+        return statusCode;
     }
 
-    private void createResponse(String contentType, int contentLength) {
-        this.statusLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription();
-        addHeader("Content-Type", contentType);
-        addHeader("Content-Length", Integer.toString(contentLength));
+    public String getStatusMessage() {
+        return statusMessage;
     }
 
-    public int getStatusCode() {
-        return statusCode.getCode();
+    public Map<String, String> getHeaders() {
+        return headers;
     }
 
     public String getBody() {
         return body;
     }
 
-    public void addHeader(String key, String value) {
-        headers.put(key, value);
-    }
-
-    public String getHeader(String key) {
-        return headers.get(key);
-    }
-
-    public Hashtable<String, String> getHeaders() {
-        return headers;
-    }
-
     @Override
     public String toString() {
-        StringBuilder responseString = new StringBuilder();
-        responseString.append(statusLine).append("\r\n");
-        this.headers.forEach((key, value) -> responseString.append(key).append(": ").append(value).append("\r\n"));
-        responseString.append("\r\n");
-        responseString.append(body);
+        StringBuilder response = new StringBuilder();
+        response.append("HTTP/1.1 ").append(statusCode.getCode()).append(" ").append(statusMessage).append("\r\n");
 
-        return responseString.toString();
+        // Append headers
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            response.append(header.getKey()).append(": ").append(header.getValue()).append("\r\n");
+        }
+
+        response.append("\r\n");
+
+        // Append body if present
+        if (body != null) {
+            response.append(body);
+        }
+
+        return response.toString();
     }
 }

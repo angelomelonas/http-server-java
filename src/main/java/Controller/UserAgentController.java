@@ -1,8 +1,10 @@
 package Controller;
 
-import Enum.StatusCode;
+import Enum.ContentType;
+import Enum.Header;
 import Request.Request;
 import Response.Response;
+import Response.ResponseBuilder;
 
 public class UserAgentController extends AbstractController {
     public UserAgentController(Request request) {
@@ -10,12 +12,12 @@ public class UserAgentController extends AbstractController {
     }
 
     protected Response getResponse() {
-        try {
-            String userAgent = this.request.getHeaderParameter("User-Agent");
+        String userAgentHeader = this.request.getHeaderParameter(Header.USER_AGENT.getHeaderName());
 
-            return new Response(StatusCode.OK, userAgent);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new ResponseBuilder()
+                .setContentType(ContentType.TEXT_PLAIN)
+                .setBody(userAgentHeader)
+                .setContentLength()
+                .build();
     }
 }

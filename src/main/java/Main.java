@@ -1,4 +1,4 @@
-import HTTPServer.HTTPServer;
+import Server.HTTPServer;
 
 public class Main {
 

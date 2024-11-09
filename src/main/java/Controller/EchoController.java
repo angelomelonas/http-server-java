@@ -1,23 +1,23 @@
 package Controller;
 
-import Enum.StatusCode;
+import Enum.ContentType;
 import Request.Request;
 import Response.Response;
+import Response.ResponseBuilder;
 import Utility.RequestUtility;
 
 public class EchoController extends AbstractController {
-
     public EchoController(Request request) {
         super(request);
     }
 
-    protected Response getResponse() {
-        try {
-            String requestLine = RequestUtility.getSlug(this.request);
+    protected Response getResponse() throws Exception {
+        String requestSlug = RequestUtility.getSlug(this.request);
 
-            return new Response(StatusCode.OK, requestLine);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new ResponseBuilder()
+                .setContentType(ContentType.TEXT_PLAIN)
+                .setBody(requestSlug)
+                .setContentLength()
+                .build();
     }
 }

@@ -1,6 +1,4 @@
-package HTTPServer;
-
-import Connection.ConnectionHandler;
+package Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -27,7 +25,7 @@ public class HTTPServer {
                 Socket clientSocket = serverSocket.accept(); // Wait for connection from client.
 
                 // Handle an incoming connection
-                Runnable connectionHandler = new ConnectionHandler(clientSocket);
+                Runnable connectionHandler = new HTTPConnectionHandler(clientSocket);
                 new Thread(connectionHandler).start();
             } while (true);
         } catch (IOException e) {
