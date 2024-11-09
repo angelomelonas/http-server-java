@@ -33,7 +33,7 @@ public class FilesController extends AbstractController {
         }
 
         return new ResponseBuilder()
-                .setStatusCode(StatusCode.NOT_FOUND, "File Not Found")
+                .setStatusCode(StatusCode.NOT_FOUND, StatusCode.NOT_FOUND.getDescription())
                 .build();
     }
 
