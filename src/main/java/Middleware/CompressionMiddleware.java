@@ -24,7 +24,7 @@ public class CompressionMiddleware implements Middleware {
 
             response.setBody(hexEncoded);
             response.setHeader(Header.CONTENT_ENCODING, "gzip");
-            response.setHeader(Header.CONTENT_LENGTH, String.valueOf(hexEncoded.length()));
+            response.setHeader(Header.CONTENT_LENGTH, String.valueOf(compressedBody.length));
         }
     }
 
