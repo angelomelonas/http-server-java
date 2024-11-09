@@ -20,9 +20,11 @@ public class CompressionMiddleware implements Middleware {
     public void handleResponse(Request request, Response response) {
         if (this.shouldCompressWithGzip(request)) {
             byte[] compressedBody = compressBodyGzip(response);
-            HexFormat hex = HexFormat.of();
-            response.setBody(hex.formatHex(compressedBody));
+            String hexEncoded = HexFormat.of().formatHex(compressedBody);
+
+            response.setBody(hexEncoded);
             response.setHeader(Header.CONTENT_ENCODING, "gzip");
+            response.setHeader(Header.CONTENT_LENGTH, String.valueOf(hexEncoded.length()));
         }
     }
 
