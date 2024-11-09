@@ -12,7 +12,9 @@ public class CompressionMiddleware implements Middleware {
 
     @Override
     public void handleResponse(Request request, Response response) {
-        if (request.getHeaderParameter(Header.ACCEPT_ENCODING).equals("gzip")) {
+        String acceptEncoding = request.getHeaderParameter(Header.ACCEPT_ENCODING);
+
+        if (acceptEncoding != null && acceptEncoding.equals("gzip")) {
             response.setHeader(Header.CONTENT_ENCODING, "gzip");
         }
     }
