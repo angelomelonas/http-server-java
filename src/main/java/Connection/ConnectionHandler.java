@@ -23,7 +23,7 @@ public class ConnectionHandler implements Runnable {
             InputStream inputStream = this.socket.getInputStream();
 
             String rawRequest = getRawRequest(inputStream);
-            Request request = new Request(rawRequest);
+            Request request = new Request(rawRequest.stripTrailing());
 
             Router router = new Router(request);
             Response response = router.routeRequest();
@@ -36,9 +36,12 @@ public class ConnectionHandler implements Runnable {
     }
 
     private String getRawRequest(InputStream inputStream) throws IOException {
-        byte[] buffer = new byte[1024];
-        inputStream.read(buffer);
+        StringBuilder result = new StringBuilder();
+        do {
+            // Construct the request byte by byte, and converting each to a character.
+            result.append((char) inputStream.read());
+        } while (inputStream.available() > 0);
 
-        return new String(buffer);
+        return result.toString();
     }
 }
