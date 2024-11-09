@@ -12,7 +12,7 @@ public class UserAgentController extends AbstractController {
     }
 
     protected Response getResponse() {
-        String userAgentHeader = this.request.getHeaderParameter(Header.USER_AGENT.getHeaderName());
+        String userAgentHeader = this.request.getHeaderParameter(Header.USER_AGENT);
 
         return new ResponseBuilder()
                 .setContentType(ContentType.TEXT_PLAIN)

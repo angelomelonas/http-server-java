@@ -1,5 +1,7 @@
 package Request;
 
+import Enum.Header;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.Hashtable;
@@ -25,7 +27,7 @@ public class Request {
             setRequestLine(reader.readLine());
 
             String header = reader.readLine();
-            while (!header.isEmpty()) {
+            while (header != null && !header.isEmpty()) {
                 appendHeaderParameter(header);
                 header = reader.readLine();
             }
@@ -69,8 +71,8 @@ public class Request {
         return requestLine;
     }
 
-    public String getHeaderParameter(String headerName) {
-        return headers.get(headerName);
+    public String getHeaderParameter(Header header) {
+        return headers.get(header.getHeaderName());
     }
 
     public String getBody() {

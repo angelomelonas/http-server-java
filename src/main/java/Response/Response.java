@@ -1,5 +1,6 @@
 package Response;
 
+import Enum.Header;
 import Enum.StatusCode;
 
 import java.util.Map;
@@ -23,6 +24,10 @@ public class Response {
 
     public String getStatusMessage() {
         return statusMessage;
+    }
+
+    public void setHeader(Header header, String value) {
+        this.headers.put(header.getHeaderName(), value);
     }
 
     public Map<String, String> getHeaders() {
