@@ -40,8 +40,9 @@ public class HTTPConnectionHandler implements Runnable {
             Controller controller = router.routeRequest();
             Response response = controller.invoke();
             middlewareManager.processResponse(request, response);
+            byte[] responseBytes = response.toByteArray();
 
-            this.socket.getOutputStream().write(response.toString().getBytes());
+            this.socket.getOutputStream().write(responseBytes);
             this.socket.close();
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());

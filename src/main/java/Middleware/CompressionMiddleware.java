@@ -7,7 +7,6 @@ import Response.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HexFormat;
 import java.util.zip.GZIPOutputStream;
 
 public class CompressionMiddleware implements Middleware {
@@ -20,11 +19,10 @@ public class CompressionMiddleware implements Middleware {
     public void handleResponse(Request request, Response response) {
         if (this.shouldCompressWithGzip(request)) {
             byte[] compressedBody = compressBodyGzip(response);
-            String hexEncoded = HexFormat.of().formatHex(compressedBody);
 
-            response.setBody(hexEncoded);
             response.setHeader(Header.CONTENT_ENCODING, "gzip");
             response.setHeader(Header.CONTENT_LENGTH, String.valueOf(compressedBody.length));
+            response.setBody(compressedBody);
         }
     }
 
@@ -41,8 +39,10 @@ public class CompressionMiddleware implements Middleware {
     private byte[] compressBodyGzip(Response response) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try (GZIPOutputStream gzipOs = new GZIPOutputStream(os)) {
-            byte[] buffer = response.getBody().getBytes();
+            byte[] buffer = response.getBodyText().getBytes();
             gzipOs.write(buffer, 0, buffer.length);
+            gzipOs.close();
+
             return os.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -3,19 +3,23 @@ package Response;
 import Enum.Header;
 import Enum.StatusCode;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class Response {
     private final StatusCode statusCode;
     private final String statusMessage;
     private final Map<String, String> headers;
-    private String body;
+    private String bodyText;
+    private byte[] bodyBinary;
 
-    public Response(StatusCode statusCode, String statusMessage, Map<String, String> headers, String body) {
+    public Response(StatusCode statusCode, String statusMessage, Map<String, String> headers, String bodyText) {
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
         this.headers = headers;
-        this.body = body;
+        this.bodyText = bodyText;
     }
 
     public StatusCode getStatusCode() {
@@ -34,12 +38,51 @@ public class Response {
         return headers;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setBody(String bodyText) {
+        this.bodyText = bodyText;
+        this.bodyBinary = null;
     }
 
-    public String getBody() {
-        return body;
+    public void setBody(byte[] bodyBinary) {
+        this.bodyBinary = bodyBinary;
+        this.bodyText = null;
+    }
+
+    public String getBodyText() {
+        return bodyText;
+    }
+
+    public byte[] getBodyBinary() {
+        return bodyBinary;
+    }
+
+    public byte[] toByteArray() throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        StringBuilder responseHeaders = new StringBuilder();
+        responseHeaders.append("HTTP/1.1 ")
+                .append(statusCode.getCode())
+                .append(" ")
+                .append(statusMessage)
+                .append("\r\n");
+
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            responseHeaders.append(header.getKey())
+                    .append(": ")
+                    .append(header.getValue())
+                    .append("\r\n");
+        }
+        responseHeaders.append("\r\n");
+
+        byteArrayOutputStream.write(responseHeaders.toString().getBytes(StandardCharsets.UTF_8));
+
+        if (bodyBinary != null) {
+            byteArrayOutputStream.write(bodyBinary);
+        } else if (bodyText != null) {
+            byteArrayOutputStream.write(bodyText.getBytes(StandardCharsets.UTF_8));
+        }
+
+        return byteArrayOutputStream.toByteArray();
     }
 
     @Override
@@ -55,8 +98,8 @@ public class Response {
         response.append("\r\n");
 
         // Append body if present
-        if (body != null) {
-            response.append(body);
+        if (bodyText != null) {
+            response.append(bodyText);
         }
 
         return response.toString();
