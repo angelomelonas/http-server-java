@@ -9,7 +9,7 @@ public class Response {
     private final StatusCode statusCode;
     private final String statusMessage;
     private final Map<String, String> headers;
-    private final String body;
+    private String body;
 
     public Response(StatusCode statusCode, String statusMessage, Map<String, String> headers, String body) {
         this.statusCode = statusCode;
@@ -32,6 +32,10 @@ public class Response {
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getBody() {
